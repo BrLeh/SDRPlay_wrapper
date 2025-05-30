@@ -1,5 +1,5 @@
-from _wrapper import sdrplay_api,sdrplay_api_DeviceT,sdrplay_api_DeviceParamsT,sdrplay_api_RxChannelParamsT,sdrplay_api_Bw_MHzT,sdrplay_api_If_kHzT,sdrplay_api_AgcControlT,sdrplay_api_RspDx_AntennaSelectT,sdrplay_api_CallbackFnst
-from _wrapper import SDRStreamHandler
+from ._wrapper import sdrplay_api,sdrplay_api_DeviceT,sdrplay_api_DeviceParamsT,sdrplay_api_RxChannelParamsT,sdrplay_api_Bw_MHzT,sdrplay_api_If_kHzT,sdrplay_api_AgcControlT,sdrplay_api_RspDx_AntennaSelectT,sdrplay_api_CallbackFnst
+from ._wrapper import SDRStreamHandler
 import ctypes
 
 MAX_DEVICES = 1 #MAXIMUM NUMBER OF DEVICE
@@ -38,7 +38,7 @@ class MyRadio:
         
         sdrplay_api.sdrplay_api_UnlockDeviceApi()
 
-
+  
         device_params = sdrplay_api_DeviceParamsT()
         sdrplay_api.sdrplay_api_GetDeviceParams.argtypes=[ctypes.c_void_p,ctypes.POINTER(ctypes.POINTER(sdrplay_api_DeviceParamsT))]
         self.p_device_params=ctypes.pointer(device_params)
@@ -53,11 +53,16 @@ class MyRadio:
     
     def start(self):
         cbFns=sdrplay_api_CallbackFnst()
-        handler=SDRStreamHandler(sdrplay_api,self.p_device,cbFns)
-        handler.start()
+        self.handler=SDRStreamHandler(sdrplay_api,self.p_device,cbFns)
+        self.handler.start()
+    
+    def stop(self):
+        self.handler.register_signal_handler()
         
     def set_frequency(self,frequencyHz:float):
         self.chParams.contents.tunerParams.rfFreq.rfHz=frequencyHz
+    def set_samplingRate(self,sampling_rate:float):
+        self.p_device_params.contents.devParams.contents.fsFreq.fsHz=sampling_rate
     def set_bandwidth(self,bandwidth:sdrplay_api_Bw_MHzT):
         self.chParams.contents.tunerParams.bwType  = bandwidth
     def set_ifType(self,ifType:sdrplay_api_If_kHzT):
@@ -77,11 +82,7 @@ class MyRadio:
 
 
 
-if __name__=='__main__':
-    a=MyRadio()
-    a.get_devices()
-    a.connect()
-    a.start()
+
     
     
 

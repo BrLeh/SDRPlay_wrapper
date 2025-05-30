@@ -39,39 +39,39 @@ class sdrplay_api_TunerSelectT(ctypes.c_uint):
 
 class sdrplay_api_GainValuesT(ctypes.Structure):
     _fields_ = [
-        ("curr", ctypes.c_float),  # Gain actuel
-        ("max", ctypes.c_float),   # Gain max
-        ("min", ctypes.c_float)    # Gain min
+        ("curr", ctypes.c_float),  
+        ("max", ctypes.c_float),  
+        ("min", ctypes.c_float)   
     ]
 class sdrplay_api_GainT(ctypes.Structure):
     _fields_ = [
-        ("gRdB", ctypes.c_int),  # Gain reduction en dB
-        ("LNAstate", ctypes.c_uint),  # État du LNA (pré-ampli)
-        ("syncUpdate", ctypes.c_ubyte),  # Mise à jour synchronisée
-        ("minGr", sdrplay_api_MinGainReductionT),  # Gain minimum
-        ("gainVals", sdrplay_api_GainValuesT)  # Structure avec les valeurs de gain
+        ("gRdB", ctypes.c_int),  # Gain reduction in dB
+        ("LNAstate", ctypes.c_uint),  # LNA status
+        ("syncUpdate", ctypes.c_ubyte), 
+        ("minGr", sdrplay_api_MinGainReductionT),  
+        ("gainVals", sdrplay_api_GainValuesT)  
     ]
 
 class sdrplay_api_RfFreqT(ctypes.Structure):
     _fields_ = [
-        ("rfHz", ctypes.c_double),  # Fréquence RF en Hz
-        ("syncUpdate", ctypes.c_ubyte)  # Mise à jour synchronisée
+        ("rfHz", ctypes.c_double), 
+        ("syncUpdate", ctypes.c_ubyte)  
     ]
 
 class sdrplay_api_DcOffsetTunerT(ctypes.Structure):
     _fields_ = [
-        ("dcCal", ctypes.c_ubyte),  # Mode de calibration
-        ("speedUp", ctypes.c_ubyte),  # Accélération de calibration
-        ("trackTime", ctypes.c_int),  # Temps de suivi
-        ("refreshRateTime", ctypes.c_int)  # Taux de rafraîchissement
+        ("dcCal", ctypes.c_ubyte),  
+        ("speedUp", ctypes.c_ubyte),  
+        ("trackTime", ctypes.c_int),  
+        ("refreshRateTime", ctypes.c_int) 
     ]
 
 class sdrplay_api_TunerParamsT(ctypes.Structure):
     _fields_ = [
-        ("bwType", sdrplay_api_Bw_MHzT),  # Type de bande passante
-        ("ifType", sdrplay_api_If_kHzT),  # Type de fréquence intermédiaire
-        ("loMode", sdrplay_api_LoModeT),  # Mode de l'oscillateur local
-        ("gain", sdrplay_api_GainT),  # Paramètres de gain
-        ("rfFreq", sdrplay_api_RfFreqT),  # Fréquence RF
-        ("dcOffsetTuner", sdrplay_api_DcOffsetTunerT)  # Calibration DC
+        ("bwType", sdrplay_api_Bw_MHzT), 
+        ("ifType", sdrplay_api_If_kHzT),
+        ("loMode", sdrplay_api_LoModeT), 
+        ("gain", sdrplay_api_GainT),  
+        ("rfFreq", sdrplay_api_RfFreqT), 
+        ("dcOffsetTuner", sdrplay_api_DcOffsetTunerT)
     ]

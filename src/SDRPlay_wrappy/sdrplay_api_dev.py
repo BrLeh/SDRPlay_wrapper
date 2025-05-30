@@ -1,13 +1,13 @@
 import ctypes
-from rspdx import *
-from rsp1a import *
-from rsp2a import *
-from rspDuo import *
+from .rspdx import *
+from .rsp1a import *
+from .rsp2a import *
+from .rspDuo import *
 
 class sdrplay_api_TransferModeT(ctypes.c_uint):
-    sdrplay_api_ISOCH = 0  # Mode isochrone (priorité aux flux en temps réel)
-    sdrplay_api_BULK = 1   # Mode bulk (priorité à la fiabilité du transfert)
-
+    sdrplay_api_ISOCH = 0  # Mode isochrone
+    sdrplay_api_BULK = 1   # Mode bulk
+    
 class sdrplay_api_FsFreqT(ctypes.Structure):
     _fields_ = [("fsHz", ctypes.c_double),
                 ("syncUpdate", ctypes.c_ubyte),

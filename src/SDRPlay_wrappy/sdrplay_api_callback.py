@@ -1,5 +1,5 @@
 from ctypes import CFUNCTYPE, POINTER, c_short, Structure, Union, c_uint, c_int, c_double, c_void_p
-from sdrplay_api_tuner import sdrplay_api_TunerSelectT
+from .sdrplay_api_tuner import sdrplay_api_TunerSelectT
 
 
 # Enumerated Data Types
@@ -35,12 +35,12 @@ class sdrplay_api_GainCbParamT(Structure):
 
 class sdrplay_api_PowerOverloadCbParamT(Structure):
     _fields_ = [
-        ("powerOverloadChangeType", sdrplay_api_PowerOverloadCbEventIdT),  # Utilisez c_int pour représenter l'énumération
+        ("powerOverloadChangeType", sdrplay_api_PowerOverloadCbEventIdT),  
     ]
 
 class sdrplay_api_RspDuoModeCbParamT(Structure):
     _fields_ = [
-        ("modeChangeType", sdrplay_api_RspDuoModeCbEventIdT),  # Utilisez c_int pour représenter l'énumération
+        ("modeChangeType", sdrplay_api_RspDuoModeCbEventIdT), 
     ]
 
 class sdrplay_api_EventParamsT(Union):
@@ -60,7 +60,7 @@ class sdrplay_api_StreamCbParamsT(Structure):
     ]
 
 sdrplay_api_StreamCallback_t = CFUNCTYPE(
-    None,  # Type de retour void
+    None,  # void
     POINTER(c_short),  # short *xi
     POINTER(c_short),  # short *xq
     POINTER(sdrplay_api_StreamCbParamsT),  # sdrplay_api_StreamCbParamsT *params
@@ -70,17 +70,17 @@ sdrplay_api_StreamCallback_t = CFUNCTYPE(
 )
 
 sdrplay_api_EventCallback_t = CFUNCTYPE(
-    None,  # Type de retour void
-    sdrplay_api_EventT,  # sdrplay_api_EventT eventId (utilisez c_int pour représenter l'énumération)
-    sdrplay_api_TunerSelectT,  # sdrplay_api_TunerSelectT tuner (utilisez c_int pour représenter l'énumération)
+    None,  # void
+    sdrplay_api_EventT,  # sdrplay_api_EventT eventId
+    sdrplay_api_TunerSelectT,  # sdrplay_api_TunerSelectT tuner
     POINTER(sdrplay_api_EventParamsT),  # sdrplay_api_EventParamsT *params
     c_void_p  # void *cbContext
 )
 
 class sdrplay_api_CallbackFnst(Structure):
     _fields_ = [
-        ("StreamACbFn", sdrplay_api_StreamCallback_t),  # Pointeur vers une fonction de rappel
-        ("StreamBCbFn", sdrplay_api_StreamCallback_t),  # Pointeur vers une fonction de rappel
-        ("EventCbFn", sdrplay_api_EventCallback_t),    # Pointeur vers une fonction de rappel
+        ("StreamACbFn", sdrplay_api_StreamCallback_t), 
+        ("StreamBCbFn", sdrplay_api_StreamCallback_t),  
+        ("EventCbFn", sdrplay_api_EventCallback_t),    
     ]
 

@@ -1,10 +1,10 @@
 import ctypes
-from sdrplay_api_tuner import *
-from sdrplay_api_control import *
-from rspdx import *
-from rsp1a import *
-from rsp2a import *
-from rspDuo import *
+from .sdrplay_api_tuner import *
+from .sdrplay_api_control import *
+from .rspdx import *
+from .rsp1a import *
+from .rsp2a import *
+from .rspDuo import *
 
 class sdrplay_api_RxChannelParamsT(ctypes.Structure):
     _fields_ = [

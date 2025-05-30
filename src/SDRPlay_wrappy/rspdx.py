@@ -23,14 +23,14 @@ class sdrplay_api_RspDx_HdrModeBwT(ctypes.c_uint):
 
 class sdrplay_api_RspDxParamsT(ctypes.Structure):
     _fields_ = [
-        ("hdrEnable", ctypes.c_ubyte),       # Activation HDR
-        ("biasTEnable", ctypes.c_ubyte),     # Activation Bias-T
-        ("antennaSel", sdrplay_api_RspDx_AntennaSelectT), # Sélection d'antenne
-        ("rfNotchEnable", ctypes.c_ubyte),   # Filtre Notch RF
-        ("rfDabNotchEnable", ctypes.c_ubyte) # Filtre Notch DAB
+        ("hdrEnable", ctypes.c_ubyte),       # Enable HDR
+        ("biasTEnable", ctypes.c_ubyte),     # Enable Bias-T
+        ("antennaSel", sdrplay_api_RspDx_AntennaSelectT), # Antenna selection
+        ("rfNotchEnable", ctypes.c_ubyte),   # Notch Filter RF
+        ("rfDabNotchEnable", ctypes.c_ubyte) # Notch Filter DAB
     ]
 
 class sdrplay_api_RspDxTunerParamsT(ctypes.Structure):
     fields_ = [
-            ("hdrBw", sdrplay_api_RspDx_HdrModeBwT)  # Sélection de la bande HDR
+            ("hdrBw", sdrplay_api_RspDx_HdrModeBwT)  # HDR band selection
         ]

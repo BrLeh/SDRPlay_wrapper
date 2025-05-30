@@ -1,0 +1,16 @@
+Metadata-Version: 2.4
+Name: SDRPlay_wrapper
+Version: 0.1
+Summary: Python ctypes wrapper for SDRPlay C++ API
+Author-email: BrLeh <brendan.lehuede@gmail.com>
+License-Expression: MIT
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+
+# SDRPlay_wrapper
+
+Python wrapper to handle SDRPlay SDR
+
+Only works on Linux and tested on Ubuntu 22.04

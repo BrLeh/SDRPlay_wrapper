@@ -8,26 +8,26 @@ import threading
 import signal
 
 
-from rspdx import *
-from rsp1a import *
-from rsp2a import *
-from rspDuo import *
-from sdrplay_api_control import *
-from sdrplay_api import *
-from sdrplay_api_dev import *
-from sdrplay_api_tuner import *
-from sdrplay_api_callback import *
-from sdrplay_api_rx_channel import *
+from .rspdx import *
+from .rsp1a import *
+from .rsp2a import *
+from .rspDuo import *
+from .sdrplay_api_control import *
+from .sdrplay_api import *
+from .sdrplay_api_dev import *
+from .sdrplay_api_tuner import *
+from .sdrplay_api_callback import *
+from .sdrplay_api_rx_channel import *
 
 
 
 if sys.platform == "win32":
-    libname = "yourlib.dll"
+    libname = "libsdrplay_api.dll"
     raise ImportError("TO DO")
 else:
     libname = "libsdrplay_api.so"
 
-lib_path = os.path.join(os.path.dirname(__file__), "lib", libname)
+lib_path = os.path.join(os.path.dirname(__file__), "../lib", libname)
 sdrplay_api = ctypes.CDLL(lib_path)  # Linux
 
 class SDRStreamHandler:
@@ -36,11 +36,11 @@ class SDRStreamHandler:
         self.dev = ctypes.c_void_p(device_handle.contents.dev)
         self.cbFns = cbFns
 
-        self.queue = queue.Queue(maxsize=100)
+        self.queue = queue.Queue(maxsize=2000)
         self.running = False
         self.consumer_thread = None
 
-        # Crée le callback C->Python (important de le garder en référence)
+
         self._callback_c = self._build_callback()
         self.cbFns.StreamACbFn = self._callback_c
 
@@ -74,7 +74,7 @@ class SDRStreamHandler:
 
         def StreamACallback(xi, xq, params, numSamples, reset, cbContext=ctypes.c_void_p()):
             if reset:
-                print(f"[Callback] Reset reçu, numSamples={numSamples}")
+                print(f"[Callback] IQ samples received, numSamples={numSamples}")
                 return
 
             np_xi = np.ctypeslib.as_array(xi, shape=(numSamples,))
@@ -84,45 +84,51 @@ class SDRStreamHandler:
             try:
                 self.queue.put_nowait(iq_samples)
             except queue.Full:
-                print("[Callback] Queue pleine : bloc ignoré")
+                print("[Callback] Queue is full : cannot put new sample in the queue")
 
         return StreamACallbackType(StreamACallback)
 
     def _consumer_loop(self):
-        print("[Thread] Consommateur IQ démarré")
+        print("[Thread] IQ consumer thread started")
         while self.running:
             try:
                 iq_samples = self.queue.get(timeout=1)
-                self.handle_samples(iq_samples)
+                self.callback_func(iq_samples)
             except queue.Empty:
                 continue
 
     def handle_samples(self, iq_samples):
-        # Traitement à adapter selon ton usage (FFT, enregistrement, etc.)
+        #FUNCTION NOT USED. Could be used in the future.
         power = np.mean(np.abs(iq_samples)**2)
-        print(f"[Thread] Bloc reçu, puissance moyenne : {power:.2f}")
+        print(f"[Thread] Received sample, mean power : {power:.2f}")
+
+    def callback(self,callback):
+        self.callback_func=callback
+
+
 
     def start(self):
-        print("[SDR] Initialisation...")
+        print("[SDR] Initializing...")
         self.running = True
         self.consumer_thread = threading.Thread(target=self._consumer_loop)
         self.consumer_thread.start()
 
         ret = self.api.sdrplay_api_Init(self.dev, ctypes.byref(self.cbFns), ctypes.c_void_p())
         if ret != 0:
-            raise RuntimeError(f"Erreur lors de l'initialisation SDRPlay: code {ret}")
-        print("[SDR] Capture démarrée")
+            raise RuntimeError(f"Error when initializing SDRPlay device: error code {ret}")
+        print("[SDR] Record started")
 
     def stop(self):
-        print("[SDR] Arrêt...")
+        print("[SDR] Stopping...")
         self.running = False
         self.api.sdrplay_api_Uninit(self.dev)
         self.consumer_thread.join()
-        print("[SDR] Arrêt complet")
+        print("[SDR] Stopped")
 
-    def register_signal_handler(self):
+    def stop_on_command(self):
+        #FUNCTION NOT USED. Could be used in the future.
         def handler(sig, frame):
-            print("\n[Signal] Ctrl+C détecté, arrêt propre...")
+            print("\n[Signal] Ctrl+C detected, stopping the record")
             self.stop()
         signal.signal(signal.SIGINT, handler)
         
