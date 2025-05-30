@@ -35,6 +35,7 @@ class SDRStreamHandler:
         self.api = sdrplay_api
         self.dev = ctypes.c_void_p(device_handle.contents.dev)
         self.cbFns = cbFns
+        self.callback_func : function = None
 
         self.queue = queue.Queue(maxsize=2000)
         self.running = False
@@ -93,7 +94,8 @@ class SDRStreamHandler:
         while self.running:
             try:
                 iq_samples = self.queue.get(timeout=1)
-                self.callback_func(iq_samples)
+                if self.callback_func:
+                    self.callback_func(iq_samples)
             except queue.Empty:
                 continue
 
